@@ -1,0 +1,100 @@
+.dropzone {
+  border: 2px dashed #cfd4da;
+  border-radius: 16px;
+  background: #fff;
+  padding: 28px;
+  transition: 0.15s ease;
+}
+.dropzone.dragover {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12);
+}
+.dropzone-inner { user-select: none; }
+
+.file-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+.file-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.file-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  background: #f1f5ff;
+  color: #0d6efd;
+}
+.file-meta { flex: 1; min-width: 0; }
+.file-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file-sub { font-size: 12px; color: #6c757d; }
+.icon-btn {
+  border: none;
+  background: transparent;
+  color: #dc3545;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.results { display: grid; gap: 14px; }
+.result-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 14px;
+  padding: 14px;
+}
+.result-header {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.result-title { font-weight: 800; margin: 0; }
+.result-sub { color: #6c757d; font-size: 13px; margin: 2px 0 0 0; }
+
+.badge-ok,
+.badge-x{
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  font-weight: 900;
+}
+.badge-ok { background: rgba(25, 135, 84, 0.12); color: #198754; }
+.badge-x  { background: rgba(220, 53, 69, 0.12); color: #dc3545; }
+
+.lottie-wrap { width: 100%; display: grid; place-items: center; }
+#lottie { width: 220px; height: 220px; }
+
+/* Tabela ano=coluna, competência=linha */
+.dcp-table th,
+.dcp-table td {
+  text-align: center;
+  vertical-align: middle;
+}
+.dcp-table .sticky-col {
+  position: sticky;
+  left: 0;
+  background: #fff;
+}
+.dcp-table thead th.sticky-col { z-index: 3; }
+.dcp-table tbody td.sticky-col { z-index: 2; }
+.dcp-table thead th { background: #fff; }
+
+.summary-row td { background: #fbfcfe; }
