@@ -12,8 +12,8 @@
   <script>
     window.DCP_API_URL = "https://dcp-analyzer-api.onrender.com";
   </script>
-
 </head>
+
 <body class="bg-light">
 
   <div class="container py-5">
@@ -44,7 +44,15 @@
           <div class="text-muted small">
             <span id="countLabel">0</span>/10 arquivos adicionados
           </div>
-          <button id="btnAnalyze" class="btn btn-success" disabled>Analisar</button>
+
+          <div class="d-flex gap-2">
+            <button id="btnNewAnalysis" class="btn btn-outline-secondary d-none">
+              Nova análise
+            </button>
+            <button id="btnAnalyze" class="btn btn-success" disabled>
+              Analisar
+            </button>
+          </div>
         </div>
 
         <hr class="my-4" />

@@ -3,7 +3,10 @@ const MAX_FILES = 10;
 const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("fileInput");
 const btnPick = document.getElementById("btnPick");
+
+const btnNewAnalysis = document.getElementById("btnNewAnalysis");
 const btnAnalyze = document.getElementById("btnAnalyze");
+
 const fileList = document.getElementById("fileList");
 const resultsEl = document.getElementById("results");
 const countLabel = document.getElementById("countLabel");
@@ -51,9 +54,31 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
+function resetAll() {
+  if (abortController) {
+    abortController.abort();
+    abortController = null;
+  }
+
+  files = [];
+  fileList.innerHTML = "";
+  resultsEl.innerHTML = "";
+  countLabel.textContent = "0";
+
+  btnAnalyze.disabled = true;
+  btnNewAnalysis.classList.add("d-none");
+
+  fileInput.value = "";
+}
+
 function refreshUI() {
   countLabel.textContent = String(files.length);
   btnAnalyze.disabled = files.length === 0;
+
+  if (files.length === 0) {
+    btnNewAnalysis.classList.add("d-none");
+    resultsEl.innerHTML = "";
+  }
 
   fileList.innerHTML = "";
   files.forEach((f, idx) => {
@@ -76,7 +101,13 @@ function refreshUI() {
 }
 
 function addFiles(newFiles) {
-  const pdfs = [...newFiles].filter(f => f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf"));
+  // Se estava mostrando algo antigo, some com Nova análise e limpa resultados
+  resultsEl.innerHTML = "";
+  btnNewAnalysis.classList.add("d-none");
+
+  const pdfs = [...newFiles].filter(f =>
+    f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf")
+  );
   if (pdfs.length === 0) return;
 
   const remaining = MAX_FILES - files.length;
@@ -107,10 +138,14 @@ fileInput.addEventListener("change", () => {
 
 // Modal
 const bsModal = new bootstrap.Modal(analyzeModalEl, { backdrop: "static", keyboard: false });
+
 btnCancel.addEventListener("click", () => {
   if (abortController) abortController.abort();
   progressText.textContent = "Cancelando…";
 });
+
+// Nova análise
+btnNewAnalysis.addEventListener("click", () => resetAll());
 
 // ✅ Ano como coluna / Competência como linhas
 function renderResultCard(item) {
@@ -187,11 +222,14 @@ function renderResultCard(item) {
 // Analyze
 btnAnalyze.addEventListener("click", async () => {
   resultsEl.innerHTML = "";
+  btnNewAnalysis.classList.add("d-none");
   abortController = new AbortController();
 
   progressText.textContent = `Enviando ${files.length} arquivo(s)…`;
   startLottie();
   bsModal.show();
+
+  let analysisSucceeded = false;
 
   try {
     const fd = new FormData();
@@ -213,8 +251,9 @@ btnAnalyze.addEventListener("click", async () => {
 
     const data = await res.json();
     const items = data?.items ?? [];
-
     items.forEach(item => resultsEl.appendChild(renderResultCard(item)));
+
+    analysisSucceeded = true;
 
   } catch (err) {
     if (err.name === "AbortError") {
@@ -232,6 +271,13 @@ btnAnalyze.addEventListener("click", async () => {
     stopLottie();
     bsModal.hide();
     abortController = null;
+
+    // ✅ Agora aparece também em falha/cancelamento
+    // (porque o usuário pode querer recomeçar limpando tudo)
+    btnNewAnalysis.classList.remove("d-none");
+
+    // Se quiser: em sucesso, pode travar o Analisar até o usuário limpar:
+    // if (analysisSucceeded) btnAnalyze.disabled = true;
   }
 });
 
