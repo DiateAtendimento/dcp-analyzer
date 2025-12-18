@@ -6,7 +6,10 @@ import pdfParse from "pdf-parse";
 const app = express();
 
 // Ajuste depois para o domínio Netlify
-app.use(cors({ origin: true }));
+app.use(cors({
+  origin: ["https://cdp-analizador.netlify.app"]
+}));
+
 
 const upload = multer({
   storage: multer.memoryStorage(),
