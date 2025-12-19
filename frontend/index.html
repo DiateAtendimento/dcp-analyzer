@@ -14,7 +14,8 @@
   </script>
 </head>
 
-<body class="bg-light">
+<!-- ✅ REMOVIDO bg-light (para o dark mode pegar a página inteira) -->
+<body>
 
   <div class="container py-5">
     <div class="text-center mb-4">
@@ -24,6 +25,13 @@
 
     <div class="card shadow-sm border-0">
       <div class="card-body p-4">
+
+        <!-- ✅ Botão tema -->
+        <div class="d-flex justify-content-end mb-3">
+          <button id="btnTheme" class="btn btn-outline-secondary btn-sm" type="button" aria-label="Alternar tema">
+            🌙 Tema escuro
+          </button>
+        </div>
 
         <div id="dropzone" class="dropzone">
           <div class="dropzone-inner text-center">

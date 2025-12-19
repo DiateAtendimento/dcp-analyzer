@@ -1,3 +1,15 @@
+/* ✅ Fundo e texto da página inteira de acordo com o tema */
+body {
+  min-height: 100vh;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+/* (Opcional) deixa a transição suave ao alternar tema */
+html {
+  transition: background-color .15s ease, color .15s ease;
+}
+
 .dropzone {
   border: 2px dashed #cfd4da;
   border-radius: 16px;
@@ -98,3 +110,24 @@
 .dcp-table thead th { background: #fff; }
 
 .summary-row td { background: #fbfcfe; }
+
+/* ✅ Ajustes para modo escuro */
+html[data-bs-theme="dark"] .dropzone {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.15);
+}
+
+html[data-bs-theme="dark"] .file-chip,
+html[data-bs-theme="dark"] .result-card {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.12);
+}
+
+html[data-bs-theme="dark"] .dcp-table .sticky-col,
+html[data-bs-theme="dark"] .dcp-table thead th {
+  background: #121212;
+}
+
+html[data-bs-theme="dark"] .summary-row td {
+  background: rgba(255,255,255,0.04);
+}

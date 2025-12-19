@@ -4,6 +4,8 @@ const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("fileInput");
 const btnPick = document.getElementById("btnPick");
 
+const btnTheme = document.getElementById("btnTheme");
+
 const btnNewAnalysis = document.getElementById("btnNewAnalysis");
 const btnAnalyze = document.getElementById("btnAnalyze");
 
@@ -17,6 +19,34 @@ const btnCancel = document.getElementById("btnCancel");
 
 let files = [];
 let abortController = null;
+
+// ---- Tema (persistente) ----
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-bs-theme", theme);
+
+  const isDark = theme === "dark";
+  if (btnTheme) {
+    btnTheme.textContent = isDark ? "☀️ Tema claro" : "🌙 Tema escuro";
+    btnTheme.classList.toggle("btn-outline-light", isDark);
+    btnTheme.classList.toggle("btn-outline-secondary", !isDark);
+  }
+
+  localStorage.setItem("dcp_theme", theme);
+}
+
+function initTheme() {
+  const saved = localStorage.getItem("dcp_theme");
+  if (saved === "light" || saved === "dark") {
+    applyTheme(saved);
+    return;
+  }
+
+  const prefersDark =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  applyTheme(prefersDark ? "dark" : "light");
+}
 
 // Lottie (troque por JSON seu depois)
 let lottieInstance = null;
@@ -101,7 +131,6 @@ function refreshUI() {
 }
 
 function addFiles(newFiles) {
-  // Se estava mostrando algo antigo, some com Nova análise e limpa resultados
   resultsEl.innerHTML = "";
   btnNewAnalysis.classList.add("d-none");
 
@@ -146,6 +175,13 @@ btnCancel.addEventListener("click", () => {
 
 // Nova análise
 btnNewAnalysis.addEventListener("click", () => resetAll());
+
+// Tema
+initTheme();
+btnTheme?.addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-bs-theme") || "light";
+  applyTheme(current === "dark" ? "light" : "dark");
+});
 
 // ✅ Ano como coluna / Competência como linhas
 function renderResultCard(item) {
@@ -229,8 +265,6 @@ btnAnalyze.addEventListener("click", async () => {
   startLottie();
   bsModal.show();
 
-  let analysisSucceeded = false;
-
   try {
     const fd = new FormData();
     files.forEach(f => fd.append("pdfs", f, f.name));
@@ -253,8 +287,6 @@ btnAnalyze.addEventListener("click", async () => {
     const items = data?.items ?? [];
     items.forEach(item => resultsEl.appendChild(renderResultCard(item)));
 
-    analysisSucceeded = true;
-
   } catch (err) {
     if (err.name === "AbortError") {
       const warn = document.createElement("div");
@@ -272,12 +304,7 @@ btnAnalyze.addEventListener("click", async () => {
     bsModal.hide();
     abortController = null;
 
-    // ✅ Agora aparece também em falha/cancelamento
-    // (porque o usuário pode querer recomeçar limpando tudo)
     btnNewAnalysis.classList.remove("d-none");
-
-    // Se quiser: em sucesso, pode travar o Analisar até o usuário limpar:
-    // if (analysisSucceeded) btnAnalyze.disabled = true;
   }
 });
 
